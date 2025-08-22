@@ -1,63 +1,75 @@
 // Tenemos un li de productos
 
+// Primero, defino la lista de productos que quiero mostrar.
+// Cada producto tiene nombre, tipo, color e imagen.
 const productos = [
-  {nombre: "Zapato negro", tipo: "zapato", color: "negro", img: "./taco-negro.jpg"},
-  {nombre: "Zapato azul", tipo: "zapato", color: "azul", img: "./taco-azul.jpg"},
-  {nombre: "Bota negra", tipo: "bota", color: "negro", img: "./bota-negra.jpg"},
-  {nombre: "Bota azul", tipo: "bota", color: "azul", img: "./bota-azul.jpg"},
-  {nombre: "Zapato rojo", tipo: "zapato", color: "rojo", img: "./zapato-rojo.jpg"}
-]
+  { nombre: "Zapato negro", tipo: "zapato", color: "negro", img: "./taco-negro.jpg" },
+  { nombre: "Zapato azul", tipo: "zapato", color: "azul", img: "./taco-azul.jpg" },
+  { nombre: "Bota negra", tipo: "bota", color: "negro", img: "./bota-negra.jpg" },
+  { nombre: "Bota azul", tipo: "bota", color: "azul", img: "./bota-azul.jpg" },
+  { nombre: "Zapato rojo", tipo: "zapato", color: "rojo", img: "./zapato-rojo.jpg" }
+];
 
-const li = document.getElementsByName("lista-de-productos")
-const $i = document.querySelector('.input');
+// Selecciono el contenedor donde voy a mostrar los productos.
+// Me aseguro de que en el HTML tenga el id correcto: "lista-de-productos".
+const contenedorProductos = document.getElementById("lista-de-productos");
 
-for (let i = 0; i < productos.length; i++) {
-  var d = document.createElement("div")
-  d.classList.add("producto")
+// También selecciono el input de búsqueda para leer lo que escriba el usuario.
+const inputBusqueda = document.querySelector(".input");
 
-  var ti = document.createElement("p")
-  ti.classList.add("titulo")
-  ti.textContent = productos[i].nombre
-  
-  var imagen = document.createElement("img");
-  imagen.setAttribute('src', productos[i].img);
+// Esta función muestra productos en pantalla.
+// Limpia el contenedor y agrega elementos HTML por cada producto.
+function mostrarProductos(productosAMostrar) {
+  contenedorProductos.innerHTML = ""; // Limpio lo anterior
 
-  d.appendChild(ti)
-  d.appendChild(imagen)
+  productosAMostrar.forEach(producto => {
+    // Creo el div principal del producto
+    const divProducto = document.createElement("div");
+    divProducto.classList.add("producto");
 
-  li.appendChild(d)
+    // Creo el párrafo para el nombre del producto
+    const titulo = document.createElement("p");
+    titulo.classList.add("titulo");
+    titulo.textContent = producto.nombre;
+
+    // Creo la imagen y le agrego la ruta
+    const imagen = document.createElement("img");
+    imagen.setAttribute("src", producto.img);
+
+    // Añado el título y la imagen al div
+    divProducto.appendChild(titulo);
+    divProducto.appendChild(imagen);
+
+    // Añado el div al contenedor principal
+    contenedorProductos.appendChild(divProducto);
+  });
 }
 
-displayProductos(productos)
+// Al cargar la página, muestro todos los productos
+mostrarProductos(productos);
+
+// Esta función filtra productos por tipo o color usando el texto del input
+function filtrarProductos(lista, texto) {
+  const textoLimpio = texto.toLowerCase().trim(); // Limpio espacios y paso a minúsculas
+
+  // Devuelvo los productos cuyo tipo o color coincidan con el texto
+  return lista.filter(item =>
+    item.tipo.includes(textoLimpio) || item.color.includes(textoLimpio)
+  );
+}
+
+// Cuando el usuario hace clic en el botón, filtro los productos
 const botonDeFiltro = document.querySelector("button");
 
-botonDeFiltro.onclick = function() {
-  while (li.firstChild) {
-    li.removeChild(li.firstChild);
-  }
+botonDeFiltro.onclick = () => {
+  const textoBusqueda = inputBusqueda.value; // Obtengo lo que escribió el usuario
 
-  const texto = $i.value;
-  console.log(texto);
-  const productosFiltrados = filtrado(productos, texto );
+  // Aplico el filtro
+  const productosFiltrados = filtrarProductos(productos, textoBusqueda);
 
-  for (let i = 0; i < productosFiltrados.length; i++) {
-    var d = document.createElement("div")
-    d.classList.add("producto")
-  
-    var ti = document.createElement("p")
-    ti.classList.add("titulo")
-    ti.textContent = productosFiltrados[i].nombre
-    
-    var imagen = document.createElement("img");
-    imagen.setAttribute('src', productosFiltrados[i].img);
-  
-    d.appendChild(ti)
-    d.appendChild(imagen)
-  
-    li.appendChild(d)
-  }
-}
+  // Muestro los resultados
+  mostrarProductos(productosFiltrados);
+};
 
-const filtrado = (productos = [], texto) => {
-  return productos.filter(item => item.tipo.includes(texto) || item.color.includes(texto));
-}  
+
+//este es el codigo que use pero me modifico la pagina :( 
